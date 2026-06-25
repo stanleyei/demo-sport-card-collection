@@ -5,7 +5,7 @@ import { useHoloTilt } from '../composables/useHoloTilt'
 
 const emit = defineEmits(['revealed'])
 
-const backImg = '/assets/card-back.jpg'
+const backImg = `${import.meta.env.BASE_URL}assets/card-back.jpg`
 
 const phase = ref('pack') // pack → revealing → card
 const drawn = ref(null)

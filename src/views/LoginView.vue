@@ -29,7 +29,7 @@ function submit() {
     <div class="w-full max-w-[360px] rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur-xl"
          style="box-shadow: 0 24px 60px rgba(0,0,0,.5);">
       <h1 class="text-center text-2xl font-black tracking-wide">會員登入</h1>
-      <p class="mt-2 text-center text-sm text-[var(--muted)]">登入後即可收藏卡片（示意：任意帳密皆可登入）</p>
+      <p class="mt-2 text-center text-sm text-[var(--muted)]">登入後即可收藏卡片</p>
 
       <form class="mt-6 flex flex-col gap-4" @submit.prevent="submit">
         <label class="flex flex-col gap-1.5">

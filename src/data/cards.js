@@ -3,7 +3,7 @@
 //   type: 'award' 獲獎 ／ 'participation' 參與
 export const CARDS = [
   {
-    id: 'CRAD01', img: '/assets/CRAD01.jpg', name: '林益全', sport: '棒球', team: '富邦悍將', position: '內野手',
+    id: 'CRAD01', img: `${import.meta.env.BASE_URL}assets/CRAD01.jpg`, name: '林益全', sport: '棒球', team: '富邦悍將', position: '內野手',
     achievements: [
       { year: '2009', title: '中華職棒 年度新人王', type: 'award' },
       { year: '2011', title: '中華職棒 年度MVP', type: 'award' },
@@ -12,7 +12,7 @@ export const CARDS = [
     ],
   },
   {
-    id: 'CRAD02', img: '/assets/CRAD02.jpg', name: '陳傑憲', sport: '棒球', team: '統一獅', position: '內野手',
+    id: 'CRAD02', img: `${import.meta.env.BASE_URL}assets/CRAD02.jpg`, name: '陳傑憲', sport: '棒球', team: '統一獅', position: '內野手',
     achievements: [
       { year: '2019', title: '中華職棒 打擊王', type: 'award' },
       { year: '2021', title: '東京奧運 中華隊', type: 'participation' },
@@ -21,7 +21,7 @@ export const CARDS = [
     ],
   },
   {
-    id: 'CRAD03', img: '/assets/CRAD03.jpg', name: '王柏融', sport: '棒球', team: 'Lamigo 桃猿', position: '外野手',
+    id: 'CRAD03', img: `${import.meta.env.BASE_URL}assets/CRAD03.jpg`, name: '王柏融', sport: '棒球', team: 'Lamigo 桃猿', position: '外野手',
     achievements: [
       { year: '2016', title: '中華職棒 打擊王', type: 'award' },
       { year: '2016', title: '中華職棒 安打王', type: 'award' },
@@ -30,7 +30,7 @@ export const CARDS = [
     ],
   },
   {
-    id: 'CRAD04', img: '/assets/CRAD04.jpg', name: '彭政閔', sport: '棒球', team: '中信兄弟', position: '內野手',
+    id: 'CRAD04', img: `${import.meta.env.BASE_URL}assets/CRAD04.jpg`, name: '彭政閔', sport: '棒球', team: '中信兄弟', position: '內野手',
     achievements: [
       { year: '2003', title: '中華職棒 年度MVP', type: 'award' },
       { year: '2006', title: '杜哈亞運 中華隊', type: 'participation' },
