@@ -61,7 +61,7 @@ onMounted(() => {
   height: auto;
   width: 100%;
   /* 小卡尺寸縮小會使傾斜深度變淺，縮短透視距離補回明顯的晃動幅度 */
-  perspective: 700px;
+  perspective: 600px;
 }
 .holo-card.is-fluid :deep(.holo-aura) { display: none; }
 </style>
