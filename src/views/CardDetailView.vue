@@ -61,8 +61,8 @@ function goBack() {
       </div>
 
       <div v-else class="mx-auto flex max-w-md flex-col items-center">
-        <!-- 互動光卡（與抽卡時同源：桌機滑鼠、手機陀螺儀） -->
-        <HoloCard :img="card.img" :alt="card.name" />
+        <!-- 互動光卡（與抽卡時同源：桌機滑鼠、手機陀螺儀）；點擊翻轉一圈後放大 -->
+        <HoloCard zoomable :img="card.img" :alt="card.name" />
 
         <!-- 姓名與類別 -->
         <h2 class="mt-4 text-3xl font-black tracking-wide">{{ card.name }}</h2>

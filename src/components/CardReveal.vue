@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { pickCard, CARDS } from '../data/cards'
 import { useHoloTilt } from '../composables/useHoloTilt'
+import HoloFace from './HoloFace.vue'
 
 const emit = defineEmits(['revealed'])
 
@@ -105,9 +106,7 @@ function burst() {
           <img :src="backImg" alt="卡包" />
         </div>
         <div class="card__face card__front">
-          <img class="holo-img" :src="drawn?.img" alt="運動員卡" />
-          <div class="holo-shine"></div>
-          <div class="holo-glare"></div>
+          <HoloFace :img="drawn?.img" alt="運動員卡" />
         </div>
       </div>
     </div>
