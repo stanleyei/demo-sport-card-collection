@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./fonts.css";
 
 /* ===== 全域舞台變數與底色（延續原 index.html 夜間球場氛圍） ===== */
 :root {
