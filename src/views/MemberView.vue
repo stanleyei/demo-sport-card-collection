@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import { useCollection } from '../composables/useCollection'
-import { sportIcon } from '../data/cards'
+import HoloCard from '../components/HoloCard.vue'
 
 const router = useRouter()
 const { user, logout } = useAuth()
@@ -66,21 +66,15 @@ function doLogout() {
         </button>
       </div>
 
-      <!-- 卡片格狀清單（精簡：圖像＋姓名＋運動類別，點擊進詳細頁） -->
-      <ul v-else class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-        <li v-for="item in items" :key="item.uid">
-          <button
-            class="block w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left transition hover:border-[var(--gold)]/50 hover:bg-white/10 active:scale-[.98] cursor-pointer"
-            @click="openDetail(item.uid)"
-          >
-            <div class="aspect-[618/990] w-full overflow-hidden">
-              <img :src="item.img" :alt="item.name" class="h-full w-full object-cover" />
-            </div>
-            <div class="p-3">
-              <div class="truncate text-lg font-black">{{ item.name }}</div>
-              <div class="mt-1 inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[14px] font-semibold text-[var(--ink)]">{{ sportIcon(item.sport) }} {{ item.sport }}</div>
-            </div>
-          </button>
+      <!-- 卡片格狀清單（僅留卡片，互動光效與內容頁／翻卡頁同源；電腦版 hover-only） -->
+      <ul v-else class="grid grid-cols-2 gap-5 py-2 sm:grid-cols-3 md:grid-cols-4">
+        <li
+          v-for="item in items"
+          :key="item.uid"
+          class="cursor-pointer"
+          @click="openDetail(item.uid)"
+        >
+          <HoloCard fluid :idle-sweep="false" :img="item.img" :alt="item.name" />
         </li>
       </ul>
     </div>
