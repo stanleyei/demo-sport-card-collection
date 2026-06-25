@@ -13,11 +13,15 @@ defineProps({
 
 const {
   enabled, idle, vars,
-  onMouseMove, onMouseLeave, onTouchStart, onTouchMove, onTouchEnd, armGyro,
+  onMouseMove, onMouseLeave, onTouchStart, onTouchMove, onTouchEnd, armGyro, enableGyro,
 } = useHoloTilt()
 
-// 詳細頁卡片已揭曉，永遠可互動
-onMounted(() => { enabled.value = true })
+// 詳細頁卡片已揭曉，永遠可互動；並自動掛上陀螺儀監聽，
+// 讓卡片一進畫面就像翻卡頁一樣跟著手機晃動（權限已於抽卡流程授予）。
+onMounted(() => {
+  enabled.value = true
+  enableGyro()
+})
 </script>
 
 <template>
@@ -56,6 +60,8 @@ onMounted(() => { enabled.value = true })
 .holo-card.is-fluid {
   height: auto;
   width: 100%;
+  /* 小卡尺寸縮小會使傾斜深度變淺，縮短透視距離補回明顯的晃動幅度 */
+  perspective: 700px;
 }
 .holo-card.is-fluid :deep(.holo-aura) { display: none; }
 </style>
