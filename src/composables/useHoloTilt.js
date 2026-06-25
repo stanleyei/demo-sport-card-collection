@@ -47,7 +47,7 @@ export function useHoloTilt() {
   // === 陀螺儀 ===
   // 以使用者第一筆讀數作為中心點，之後用相對位移映射，避免持握角度造成偏移。
   // GYRO_RANGE 越小越靈敏（吃滿 ±傾斜所需角度）；實機可在 18~25 間微調手感。
-  const GYRO_RANGE = 22
+  const GYRO_RANGE = 18;
   let gyroHandler = null
   let baseBeta = null, baseGamma = null
   function enableGyro() {

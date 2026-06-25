@@ -1,11 +1,20 @@
 <script setup>
-import { ref } from 'vue'
-import { pickCard } from '../data/cards'
+import { ref, onMounted } from 'vue'
+import { pickCard, CARDS } from '../data/cards'
 import { useHoloTilt } from '../composables/useHoloTilt'
 
 const emit = defineEmits(['revealed'])
 
 const backImg = `${import.meta.env.BASE_URL}assets/card-back.jpg`
+
+// 預先載入所有卡面（含卡背），確保翻牌瞬間圖片已就緒，
+// 慢網路下不會出現翻開後才從上往下載入的情況。
+onMounted(() => {
+  [backImg, ...CARDS.map((c) => c.img)].forEach((src) => {
+    const img = new Image()
+    img.src = src
+  })
+})
 
 const phase = ref('pack') // pack → revealing → card
 const drawn = ref(null)
