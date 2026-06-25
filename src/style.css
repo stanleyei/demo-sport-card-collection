@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+/* ===== 全域舞台變數與底色（延續原 index.html 夜間球場氛圍） ===== */
+:root {
+  /* 亞運四色 */
+  --indigo: #4a3aa8;
+  --gold:   #e6b400;
+  --green:  #1f9e57;
+  --red:    #e3352b;
+  /* 舞台 */
+  --bg-0: #070b18;
+  --bg-1: #0e1730;
+  --ink:  #f2f5ff;
+  --muted:#9fb0d4;
+
+  --card-radius: 18px;
+  /* 卡片大小：以可用高度為主，矮螢幕自動縮小 */
+  --card-h: min(50vh, 80vw * 1.602, 460px);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg-0);
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+body {
+  background:
+    radial-gradient(120vw 70vh at 50% -10%, #1b2a5c 0%, transparent 60%),
+    radial-gradient(90vw 60vh at 50% 115%, #14224a 0%, transparent 55%),
+    linear-gradient(165deg, var(--bg-1) 0%, var(--bg-0) 100%);
+}
+
+#app { height: 100%; }
+
+/* 地面光暈 */
+.stage-floor {
+  content: "";
+  position: fixed; left: 50%; bottom: 5%;
+  width: 80vw; max-width: 460px; height: 80px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(230,180,0,.25), transparent 70%);
+  filter: blur(10px); pointer-events: none; z-index: 0;
+}
+
+/* ===== 夜間球場氛圍 ===== */
+.ambiance { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(48px);
+  will-change: transform; animation: drift ease-in-out infinite alternate;
+}
+.orb.gold { background: radial-gradient(circle, rgba(230,180,0,.32), transparent 70%); }
+.orb.blue { background: radial-gradient(circle, rgba(70,120,190,.30), transparent 70%); }
+@keyframes drift {
+  from { transform: translate3d(0,0,0); }
+  to   { transform: translate3d(var(--dx,30px), var(--dy,-26px), 0); }
+}
+
+/* 細膠片顆粒 */
+.grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* 四角壓暗 */
+.vignette {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 75% 65% at 50% 45%, transparent 50%, rgba(0,0,0,.55) 100%);
+}

@@ -1,0 +1,67 @@
+/* ===== 共用全息光效（抽卡頁與收藏詳細頁完全一致） =====
+   根元素需帶 .holo-root，並由 useHoloTilt 注入 CSS 變數
+   狀態 class：.is-ready（已揭曉）、.is-idle（待機自動掃光） */
+
+.holo-root { --holo-max: .30; }
+
+.holo-tilt {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .2s ease-out;
+}
+
+.holo-img, .holo-shine, .holo-glare {
+  position: absolute; inset: 0; border-radius: var(--card-radius); overflow: hidden;
+}
+.holo-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* 全息層 */
+.holo-shine {
+  z-index: 3; opacity: calc(var(--o) * var(--holo-max));
+  mix-blend-mode: color-dodge;
+  filter: brightness(.9) contrast(2.2) saturate(.85);
+  --space: 4%;
+  background-image:
+    repeating-linear-gradient(0deg,
+      hsl(2,100%,73%)   calc(var(--space)*0),
+      hsl(53,100%,69%)  calc(var(--space)*1),
+      hsl(93,100%,69%)  calc(var(--space)*2),
+      hsl(176,100%,76%) calc(var(--space)*3),
+      hsl(228,100%,74%) calc(var(--space)*4),
+      hsl(283,100%,73%) calc(var(--space)*5),
+      hsl(2,100%,73%)   calc(var(--space)*6)),
+    repeating-linear-gradient(133deg,
+      #0e152e 0%, hsl(180,10%,60%) 3.8%, #0e152e 4.5%,
+      #0e152e 6%, hsl(180,10%,70%) 8%, #0e152e 10%);
+  background-size: 160% 160%, 200% 200%;
+  background-position: var(--posx) var(--posy), var(--posx) var(--posy);
+  background-blend-mode: screen;
+}
+
+/* 玻璃光澤 */
+.holo-glare {
+  z-index: 4; opacity: var(--o); mix-blend-mode: overlay;
+  background-image: radial-gradient(
+    farthest-corner circle at var(--mx) var(--my),
+    rgba(255,255,255,.85) 8%, rgba(255,255,255,.5) 20%, rgba(0,0,0,.5) 90%);
+}
+
+/* 光環（普通） */
+.holo-aura {
+  position: absolute; inset: -24px; z-index: -1; border-radius: 36px;
+  opacity: 0; filter: blur(24px); transition: opacity .8s;
+  background: radial-gradient(closest-side, rgba(180,200,255,.4), transparent);
+}
+.is-ready .holo-aura { opacity: 1; }
+
+/* 待機自動掃光（不傾斜也看得到光澤流動） */
+.is-ready.is-idle .holo-shine { animation: holoIdle 3.5s ease-in-out infinite; }
+.is-ready.is-idle .holo-glare { animation: glareIdle 3.5s ease-in-out infinite; }
+@keyframes holoIdle {
+  0%,100% { opacity: calc(var(--holo-max) * .25); background-position: 20% 80%, 20% 80%; }
+  50%     { opacity: calc(var(--holo-max) * .7);  background-position: 80% 20%, 80% 20%; }
+}
+@keyframes glareIdle {
+  0%,100% { opacity: .25; background-position: 0 0; }
+  50%     { opacity: .5; }
+}
