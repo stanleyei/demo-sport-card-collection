@@ -73,14 +73,14 @@ function goBack() {
         <!-- 頁籤 -->
         <div class="mt-6 grid w-full grid-cols-2 gap-1 rounded-2xl border border-white/10 bg-white/5 p-1">
           <button
-            class="rounded-xl py-2.5 text-[15px] font-bold transition"
+            class="rounded-xl py-2.5 text-[15px] font-bold transition cursor-pointer"
             :class="activeTab === 'basic' ? 'bg-[var(--gold)] text-black' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
             @click="selectTab('basic')"
           >
             基本資料
           </button>
           <button
-            class="rounded-xl py-2.5 text-[15px] font-bold transition"
+            class="rounded-xl py-2.5 text-[15px] font-bold transition cursor-pointer"
             :class="activeTab === 'history' ? 'bg-[var(--gold)] text-black' : 'text-[var(--muted)] hover:text-[var(--ink)]'"
             @click="selectTab('history')"
           >

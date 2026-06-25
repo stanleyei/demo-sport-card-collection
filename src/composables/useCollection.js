@@ -55,6 +55,15 @@ function getByUid(uid) {
   return state.items.find((c) => c.uid === uid) || null
 }
 
+// 清空收藏（登出時呼叫，避免狀態殘留給下一位使用者）
+function clear() {
+  state.items = []
+  state.seq = 0
+  sessionStorage.removeItem(COLLECTION_KEY)
+  sessionStorage.removeItem(SERIAL_SEQ_KEY)
+  sessionStorage.removeItem(PENDING_KEY)
+}
+
 // 待收藏卡片：未登入時暫存，登入後自動補加入
 function setPending(card) {
   sessionStorage.setItem(PENDING_KEY, JSON.stringify(card))
@@ -76,6 +85,7 @@ export function useCollection() {
     count: computed(() => state.items.length),
     add,
     getByUid,
+    clear,
     setPending,
     takePending,
   }

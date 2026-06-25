@@ -6,7 +6,7 @@ import HoloCard from '../components/HoloCard.vue'
 
 const router = useRouter()
 const { user, logout } = useAuth()
-const { items, count } = useCollection()
+const { items, count, clear } = useCollection()
 
 function drawAgain() {
   router.push({ name: 'draw' })
@@ -18,6 +18,7 @@ function openDetail(uid) {
 
 function doLogout() {
   logout()
+  clear()
   router.replace({ name: 'draw' })
 }
 </script>

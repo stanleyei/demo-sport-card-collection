@@ -40,7 +40,7 @@ function collect() {
         <path d="M3 7h18M3 12h18M3 17h18" />
       </svg>
       我的收藏
-      <span v-if="count" class="ml-0.5 rounded-full bg-[var(--gold)] px-1.5 text-xs font-bold text-black">{{ count }}</span>
+      <span v-if="isLoggedIn && count" class="ml-0.5 rounded-full bg-[var(--gold)] px-1.5 text-xs font-bold text-black">{{ count }}</span>
     </button>
 
     <h1 class="text-2xl font-black leading-snug tracking-wide sm:text-3xl sr-only">菁英運動員卡</h1>
