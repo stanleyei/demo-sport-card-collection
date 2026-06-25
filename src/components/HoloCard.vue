@@ -28,20 +28,27 @@ onMounted(() => {
 
 // === 放大燈箱 ===
 const zoomed = ref(false)
+const inlineHidden = ref(false) // 放大時隱藏原卡，關閉落地時再現身（擺回卡槽）
 const inlineCardRef = ref(null) // 頁面原卡，作為關閉時飛回的目標位置
-const zoomCardRef = ref(null)   // 放大層卡片
+
+const reduceMotion = typeof matchMedia !== 'undefined' &&
+  matchMedia('(prefers-reduced-motion: reduce)').matches
 
 function onCardClick() {
   armGyro() // 維持陀螺儀權限請求
-  if (props.zoomable) zoomed.value = true
+  if (props.zoomable) {
+    inlineHidden.value = true // 先把原卡藏起來（像被拿起來放大）
+    zoomed.value = true
+  }
 }
 
 // 離場前量測原卡位置，把「飛回」終點（平移／縮放）以 CSS 變數帶入 keyframe。
+// 透過離場 hook 的 el（離場期間 DOM 仍在）取得放大卡，避免使用會被清空的模板 ref。
 // zc 本身不加任何 transform（保留透視），平移＋縮放＋旋轉全部在 .holo-zoom-flip 子層完成。
-function onBeforeLeave() {
-  const zc = zoomCardRef.value
+function onBeforeLeave(el) {
+  const zc = el.querySelector('.holo-zoom-card')
+  const flip = el.querySelector('.holo-zoom-flip')
   const target = inlineCardRef.value
-  const flip = zc?.querySelector('.holo-zoom-flip')
   if (!zc || !target || !flip) return
 
   const z = zc.getBoundingClientRect()
@@ -49,6 +56,14 @@ function onBeforeLeave() {
   flip.style.setProperty('--fly-s', (t.width / z.width).toFixed(4))
   flip.style.setProperty('--fly-x', ((t.left + t.width / 2) - (z.left + z.width / 2)).toFixed(1) + 'px')
   flip.style.setProperty('--fly-y', ((t.top + t.height / 2) - (z.top + z.height / 2)).toFixed(1) + 'px')
+}
+
+// 離場：CSS 動畫負責「轉一圈＋縮小飛回」並實心落在原卡位置；
+// 動畫尾聲（放大卡已蓋住原卡）才把原卡現身，再卸載 overlay → 無縫接管（擺回去）。
+function onZoomLeave(el, done) {
+  const dur = reduceMotion ? 300 : 550
+  window.setTimeout(() => { inlineHidden.value = false }, dur)
+  window.setTimeout(done, dur + 60)
 }
 
 function onKey(e) { if (e.key === 'Escape') zoomed.value = false }
@@ -74,7 +89,7 @@ onScopeDispose(() => {
     ref="inlineCardRef"
     class="holo-card holo-root is-ready"
     :class="{ 'is-idle': idle && idleSweep, 'is-fluid': fluid, 'is-zoomable': zoomable }"
-    :style="vars"
+    :style="[vars, { opacity: inlineHidden ? 0 : 1 }]"
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
     @click="onCardClick"
@@ -90,10 +105,9 @@ onScopeDispose(() => {
 
   <!-- 放大燈箱：點背景或卡片即關閉；放大層沿用同一份 vars，傾斜/陀螺儀效果一致 -->
   <Teleport to="body">
-    <Transition name="zoom-fade" :duration="{ enter: 0, leave: 600 }" @before-leave="onBeforeLeave">
+    <Transition name="zoom-fade" @before-leave="onBeforeLeave" @leave="onZoomLeave">
       <div v-if="zoomed" class="holo-zoom-overlay" @click="zoomed = false">
         <div
-          ref="zoomCardRef"
           class="holo-card holo-root is-ready holo-zoom-card"
           :class="{ 'is-idle': idle && idleSweep }"
           :style="vars"
@@ -169,21 +183,22 @@ onScopeDispose(() => {
   100% { transform: scale(1)   rotateY(360deg); }
 }
 
-/* 離場：背景淡出（Vue 由根元素偵測時長）；卡片不動，旋轉/縮放/平移全在 flip 子層 */
-.zoom-fade-leave-active { transition: opacity .55s ease; }
-.zoom-fade-leave-to { opacity: 0; }
+/* 離場：只淡出背景遮罩（不淡 overlay 整體），讓放大卡保持實心、落地後蓋住原卡 */
+.zoom-fade-leave-active {
+  transition: background-color .55s ease, backdrop-filter .55s ease;
+}
+.zoom-fade-leave-to {
+  background-color: rgba(3, 6, 18, 0);
+  backdrop-filter: blur(0);
+}
 
-/* flip 子層：自靜止態順向再轉一圈，並平移＋縮小飛回原卡位置（終點由 JS 設的 CSS 變數帶入） */
+/* flip 子層：自靜止態順向再轉一圈，並平移＋縮小「實心」飛回原卡位置（終點由 CSS 變數帶入） */
 .zoom-fade-leave-active .holo-zoom-flip {
   animation: holoFlyOut .55s cubic-bezier(.4, 0, .2, 1) forwards;
 }
 @keyframes holoFlyOut {
-  0%   { transform: translate(0, 0) scale(1) rotateY(360deg); opacity: 1; }
-  80%  { opacity: 1; }
-  100% {
-    transform: translate(var(--fly-x, 0), var(--fly-y, 0)) scale(var(--fly-s, .3)) rotateY(720deg);
-    opacity: 0;
-  }
+  from { transform: translate(0, 0) scale(1) rotateY(360deg); }
+  to   { transform: translate(var(--fly-x, 0), var(--fly-y, 0)) scale(var(--fly-s, .3)) rotateY(720deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -197,8 +212,8 @@ onScopeDispose(() => {
     animation: holoFlyOutReduced .3s ease forwards;
   }
   @keyframes holoFlyOutReduced {
-    0%   { transform: translate(0, 0) scale(1); opacity: 1; }
-    100% { transform: translate(var(--fly-x, 0), var(--fly-y, 0)) scale(var(--fly-s, .3)); opacity: 0; }
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(var(--fly-x, 0), var(--fly-y, 0)) scale(var(--fly-s, .3)); }
   }
 }
 </style>
