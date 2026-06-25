@@ -45,14 +45,19 @@ export function useHoloTilt() {
   function onTouchEnd() { interactEnd() }
 
   // === 陀螺儀 ===
+  // 以使用者第一筆讀數作為中心點，之後用相對位移映射，避免持握角度造成偏移。
+  // GYRO_RANGE 越小越靈敏（吃滿 ±傾斜所需角度）；實機可在 18~25 間微調手感。
+  const GYRO_RANGE = 22
   let gyroHandler = null
+  let baseBeta = null, baseGamma = null
   function enableGyro() {
     if (gyroHandler) return
     gyroHandler = (e) => {
       if (!enabled.value || e.gamma == null) return
+      if (baseGamma === null) { baseGamma = e.gamma; baseBeta = e.beta ?? 45 }
       interactStart()
-      const px = 0.5 + Math.max(-1, Math.min(1, e.gamma / 45)) * 0.5
-      const py = 0.5 + Math.max(-1, Math.min(1, ((e.beta || 45) - 45) / 45)) * 0.5
+      const px = 0.5 + Math.max(-1, Math.min(1, (e.gamma - baseGamma) / GYRO_RANGE)) * 0.5
+      const py = 0.5 + Math.max(-1, Math.min(1, ((e.beta ?? 45) - baseBeta) / GYRO_RANGE)) * 0.5
       setVars(px, py)
     }
     window.addEventListener('deviceorientation', gyroHandler)
