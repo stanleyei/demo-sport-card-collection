@@ -30,12 +30,13 @@
       hsl(228,100%,74%) calc(var(--space)*4),
       hsl(283,100%,73%) calc(var(--space)*5),
       hsl(2,100%,73%)   calc(var(--space)*6)),
+    /* 兩條細亮線一組，尾段暗區拉長到 18% 形成大空隙 → 稀疏但保持細線 */
     repeating-linear-gradient(133deg,
       #0e152e 0%, hsl(180,10%,60%) 3.8%, #0e152e 4.5%,
-      #0e152e 6%, hsl(180,10%,70%) 8%, #0e152e 10%);
+      #0e152e 6%, hsl(180,10%,70%) 8%, #0e152e 9.5%, #0e152e 18%);
   background-size: 160% 160%, 200% 200%;
   background-position: var(--posx) var(--posy), var(--posx) var(--posy);
-  background-blend-mode: screen;
+  background-blend-mode: darken;
 }
 
 /* 玻璃光澤 */
